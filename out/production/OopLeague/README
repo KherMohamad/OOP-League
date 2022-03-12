@@ -1,0 +1,44 @@
+
+
+Pentru rezolvarea cerintei am pornit de la structura generala a eroului, punandu-mi intrebarile "ce proprietati are un erou?", "de ce proprietati are nevoie un erou?", "in ce stare se afla eroul ?" si "cu ce interactioneaza un erou?".
+  
+	Raspunsul la primele 2 intrebari a venit din enuntul cerintei, orice erou avand o rasa(proprietate fixa), un hp, un prag de hp, un grad de experienta si un nivel(proprietati variabile).
+
+ 	Orice erou are nevoie de un numar id care sa-l distinga de restul eroilor(vom afla mai tarziu de ce), un prag la care nivelul sau sa creasca si un instrument care sa retina efectele luptelor sale asupra lui(prolonged damage). Deasemenea un erou trebuie sa se afle pe un teren care are de a face si cu starea eroului, afectandu-i abilitatile.
+
+	Starea eroului poate fi impartita in 2 proprietati: starea de viata a eroului(este sau nu in viata) si mobilitatea eroului(este sau nu incapacitat).
+
+	Toate aceste trei proprietati ale eroului sunt gestionate prin intermediul unor campuri, ce reprezinta atat caracterisitcile cat si starea unui erou.
+
+	Raspunsul la ultima intrebare este ca un erou interactioneaza(initial) doar cu alti eroi, iar unealta folosita pentru aceste interactiuni sunt abilitatile eroului. Implementarea acestor abilitati se face prin intermediul unor metode impartasite de toti diferitii eroi, dar fiecare avand mecanica proprie.
+
+	Aceasta metoda depinde de factori interni care sunt nivelul eroului si locatia(pastrata intr-un camp al clasei), iar cel extern este tipul eroului pe care sunt folosite acestea(dat ca parametru). In executie este implicat atat eroul atacator cat si cel atacat, care apeleaza metodele abilitatilor printr-o metoda isAttacked(mecanism double dispatch).
+
+Obs: am optat sa folosesc metode in loc de alte clase pentru implementarea abilitatilor pentru a consolida legatura intre erou si abilitatea sa si pentru a usura aplicarea mecanismului Double Dispatch.
+
+	Rezolvand problema eroilor, am trecut la problema mecanicii jocului, impartiind jocul in runde care la randul lor au fost impartite intr-un numar de actiuni intr-o ordine respectiva, acestea fiind: aplicarea efectelor prelungite ale abilitatilor, miscarea eroilor, lupta intre toti eroi aflati pe aceeasi locatie si actualizarea nivelelor eroilor.
+
+	Tot ce ramasese de facut acum era creearea unor clase pentru citirea ci prelucrarea datelor primite, executarea jocului in main si citirea datelor rezultante in output.
+
+
+	Pentru extinderea jocului cu proprietatile etapei 2 am inceput prin creearea ingerilor, punand intrebarile puse si la creearea eroilor "ce are?", "ce necesita?" si "cu ce interactioneaza?".
+
+	Spre deosebire de erou, ingerul avea putine proprietati, avand doar un tip si un teren pe care se invoca. Acestea sunt singurile campuri importante ale ingerului, restul campurilor fiind constante pe care am optat sa nu le pun in clasa Constants pentru a nu o aglomera excesiv clasa sau metodele din clasele de ingeri(constants.numeconstanta de fiecare data ar fi dus la linii lungi si cod excesiv).
+
+	Ingerii interactioneaza doar cu eroi, iar pentru implementare am folosit aceleasi principii ca la interactiunea dintre eroi. De data asta efectele ingerului depindeau de 2 factori, externi, si anume rasa eroului si starea de viata.
+
+	Pentru  strategii am folosit o implementare asemanatoare in sensul ca fiecare strategie avea metode dependente de rasa eroului ce le aplica, insa de data asta relatia intre clase nu era o simpla interactiune prin double dispatch, ci era una de agregare(fiecare erou avea o instanta a clasei strategie).
+
+	Pentru a incorpora marele magician in joc am creeat o clasa quasi-Observer ce avea 2 elemente: o arhiva(bila magica) prin care acesta urmareste intamplarile jocului, reprezntat printr-o lista de string-uri si lumina ce se aprinde atunci cand se intampla ceva relevant lui, reprezentat printr-o metoda ce adauga mesage importante la lista lui de Stringu-ri.
+
+	Pentru a facilita redarea intamplarilor pentru magician am creat o clasa Subject ce are o unica proprietate, si anume aceea de a primi un mesaj si a actualiza arhiva magicianului cu mesajul respectiv. Clasa aceasta este data eroilor si ingerilor prin agregare(magicianul vrea sa fie notificat de actiunile tuturor eroilor si ale ingerilor ce se spawn-eaza) si este folosita in main pentru ca magicianul sa tina in archiva runda in care s-a desfasurat fiecare actiune.
+
+	Modificarile facute asupra gameEngine-ului a constat in simpla adaugare a 2 pasi in structura fiecarei runzi, aceasta devenind: efectele prelungite, miscarea eroilor, alegerea strategilor, batalile, actualizarea nivelelor, aparitia si "atingerile" ingerilor si actualizarea din nou a nivelelor.
+
+
+
+	   
+
+	
+
+	
